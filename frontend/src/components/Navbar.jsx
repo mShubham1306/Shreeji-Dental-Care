@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, Phone } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const Navbar = () => {
@@ -24,7 +24,7 @@ const Navbar = () => {
   return (
     <header
       className={`fixed top-0 w-full z-50 transition-all duration-300 ${
-        scrolled ? 'glass py-3 shadow-sm' : 'bg-transparent py-5'
+        scrolled ? 'glass py-4 shadow-[0_4px_30px_rgba(0,0,0,0.03)]' : 'bg-transparent py-6'
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -34,8 +34,9 @@ const Navbar = () => {
             animate={{ opacity: 1, x: 0 }}
             className="flex items-center"
           >
-            <a href="#" className="font-bold text-2xl tracking-tighter text-textPrimary">
-              Shreeji<span className="text-primary">Dental</span>
+            <a href="#" className="font-extrabold text-2xl tracking-tighter text-textPrimary flex items-center gap-2">
+              <span className="w-8 h-8 rounded-lg bg-primary text-white flex items-center justify-center text-lg">S</span>
+              Shreeji<span className="text-primary font-medium">Dental</span>
             </a>
           </motion.div>
 
@@ -48,7 +49,7 @@ const Navbar = () => {
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.1 }}
-                className="text-textMuted hover:text-primary font-medium transition-colors"
+                className="text-[15px] text-textMuted hover:text-primary font-medium transition-colors"
               >
                 {link.name}
               </motion.a>
@@ -57,12 +58,11 @@ const Navbar = () => {
                initial={{ opacity: 0, scale: 0.9 }}
                animate={{ opacity: 1, scale: 1 }}
                transition={{ delay: 0.4 }}
-               href="https://wa.me/917567368089?text=Hello%2C%20I%20would%20like%20to%20book%20a%20dental%20appointment."
-               target="_blank"
-               rel="noopener noreferrer"
-               className="bg-primary text-white px-6 py-2.5 rounded-full font-semibold hover:bg-blue-700 shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5"
+               href="tel:+917567368089"
+               className="flex items-center gap-2 text-primary font-bold hover:text-blue-700 transition-colors ml-4"
             >
-              Book Appointment
+              <Phone className="w-4 h-4" />
+              +91 75673 68089
             </motion.a>
           </nav>
 
@@ -85,27 +85,26 @@ const Navbar = () => {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-surface border-b border-gray-200 overflow-hidden"
+            className="md:hidden bg-white border-b border-gray-100 overflow-hidden shadow-lg absolute w-full"
           >
-            <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+            <div className="px-4 pt-4 pb-6 space-y-2">
               {navLinks.map((link) => (
                 <a
                   key={link.name}
                   href={link.href}
                   onClick={() => setIsOpen(false)}
-                  className="block px-3 py-2 rounded-md text-base font-medium text-textPrimary hover:text-primary hover:bg-gray-50"
+                  className="block px-3 py-3 rounded-xl text-base font-medium text-textPrimary hover:text-primary hover:bg-blue-50 transition-colors"
                 >
                   {link.name}
                 </a>
               ))}
               <a
-                href="https://wa.me/917567368089?text=Hello%2C%20I%20would%20like%20to%20book%20a%20dental%20appointment."
-                target="_blank"
-                rel="noopener noreferrer"
+                href="tel:+917567368089"
                 onClick={() => setIsOpen(false)}
-                className="block w-full text-center mt-4 bg-primary text-white px-5 py-3 rounded-md font-medium hover:bg-blue-700 shadow-md"
+                className="flex items-center justify-center gap-2 w-full mt-4 bg-primary text-white px-5 py-4 rounded-xl font-bold hover:bg-blue-700 shadow-md"
               >
-                Book Appointment
+                <Phone className="w-5 h-5" />
+                Call +91 75673 68089
               </a>
             </div>
           </motion.div>

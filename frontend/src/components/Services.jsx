@@ -1,164 +1,156 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { ChevronRight } from 'lucide-react';
+import { ArrowRight, CheckCircle2 } from 'lucide-react';
 import api from '../services/api';
 
-const serviceData = {
-  "Root Canal Treatment": {
-    image: "https://images.unsplash.com/photo-1629909615184-74f495363b67?auto=format&fit=crop&w=600&q=80",
-    desc: "Relieves severe toothache by removing infected pulp. Painless, safe & completed in one visit with modern precision tools."
-  },
+const updatedServiceData = {
   "Dental Implants": {
-    image: "https://images.unsplash.com/photo-1606811841689-23dfddce3e95?auto=format&fit=crop&w=600&q=80",
-    desc: "Permanent titanium tooth roots that look, feel and function exactly like your real teeth — for a lifetime."
+    image: "https://images.openai.com/static-rsc-4/jTPjMky-kiHn3iZJpgufuyvqOnDbWCIQmnaKk5pA-RComhOxwOM_NvXCiZrYDdJBDVg7NS8pV9_davNzjZC8YSzwbYzIMcI_MgCvfDj2KEuLeb526E4e_DfgQlgiLcA1loLIzCcnQPp8V3mUE5reg0oMwAAV20JcSdsZDlcjD0T2jKyrd4EKpE1e5r03TFip?purpose=fullsize",
+    features: ["Permanent tooth replacement", "Natural look & feel"]
+  },
+  "Invisible Braces": {
+    image: "https://images.openai.com/static-rsc-4/6-H32YvTgyKUvhKnZfRbuMb3YuKO14aCq1kzhLGlIta3LcJeIZWyHfhGqEUpw_oY4k1YniIhdCvkvDh2bjPv-WpKryXcOvumHWF4l9acNcFvfbhy3fIhGLVDwvLLIRkBBPjYp4ok3dD-BUQxOrTSqgMjxl38vqC37IdvQbtMlLDwYekc070BssNHdmpXf2Gr?purpose=fullsize",
+    features: ["No metal braces", "Comfortable & removable"]
   },
   "Teeth Whitening": {
-    image: "https://images.unsplash.com/photo-1606265752439-1f18756aa5fc?auto=format&fit=crop&w=600&q=80",
-    desc: "Professional-grade whitening that removes stains and brightens your smile by several shades in a single session."
+    image: "https://images.openai.com/static-rsc-4/zRRrsHS35ozhJieyiYd4WEcbe1hNO2F9MB5yg1F7f7Gg1MKmuUgT41wQ_ft1TJZEkMUCPmBd_z2E21-cmDvvopLCY5tf7Y16st2ZEOCOGAtZZw_NvBgGEdhH-NAEF3eVTgwdUVGwTkMwUV-S-zC44ht9m7k5eSCBSbiM7Sjk9Nyz26GGzaS4hrHm-raEgWr6?purpose=fullsize",
+    features: ["Instant brighter smile", "Safe & painless"]
+  },
+  "Root Canal Treatment": {
+    image: "https://images.openai.com/static-rsc-4/3hNHM7ep03KHn82gkAPkjZ3wOm2Ridj5yyvD-YFCLbOKGHeENofQWrDLZseBdRGeDmpsyxebv3nUT8MmJfzj_Kj_DBn5dNA-sdsvsPMg6ojZ8UjLWk2qbsOG6IMKMm1msxwotG4UP-QaMabf5GRkgqXaVpAbMigregIJabx4CP3wiJdgJrgtqa5IBCKefVq8?purpose=fullsize",
+    features: ["Pain relief treatment", "Save natural tooth"]
   },
   "Tooth Extraction": {
     image: "https://images.unsplash.com/photo-1588776813677-77aaf5595b83?auto=format&fit=crop&w=600&q=80",
-    desc: "Gentle and safe removal of damaged, broken or wisdom teeth under local anaesthesia with minimal discomfort."
+    features: ["Painless procedure", "Quick recovery"]
   },
   "Crowns & Bridges": {
     image: "https://images.unsplash.com/photo-1609840114035-3c981b782dfe?auto=format&fit=crop&w=600&q=80",
-    desc: "Custom-crafted ceramic caps (crowns) and bridges to restore broken teeth and fill missing tooth gaps naturally."
+    features: ["Restore broken teeth", "Natural ceramic look"]
   },
   "Dentures": {
     image: "https://images.unsplash.com/photo-1571772996211-2f02c9727629?auto=format&fit=crop&w=600&q=80",
-    desc: "Comfortable, removable full or partial dentures that closely replicate natural teeth and restore your chewing ability."
+    features: ["Comfortable fit", "Restore chewing ability"]
   },
   "Gum Treatment": {
     image: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?auto=format&fit=crop&w=600&q=80",
-    desc: "Effective treatment for bleeding gums, gum disease (pyorrhoea) and deep periodontal pockets using gentle techniques."
+    features: ["Treat bleeding gums", "Healthy foundation"]
   },
   "Dental Cleaning": {
     image: "https://images.unsplash.com/photo-1598256989728-6623f99aa1fa?auto=format&fit=crop&w=600&q=80",
-    desc: "Professional ultrasonic scaling and polishing to remove tartar, plaque and stains — keeping your teeth healthy & bright."
+    features: ["Remove plaque & tartar", "Expert polishing"]
   }
 };
 
 const DEFAULT = {
-  image: "https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?auto=format&fit=crop&w=600&q=80",
-  desc: "High quality professional dental treatment tailored for your comfort."
+  image: "https://images.unsplash.com/photo-1606811841689-23dfddce3e95?auto=format&fit=crop&w=600&q=80",
+  features: ["Professional treatment", "Gentle care"]
+};
+
+// Reorder services to put the 4 main ones first if available
+const prioritizeServices = (services) => {
+  const priorities = ["Dental Implants", "Invisible Braces", "Teeth Whitening", "Root Canal Treatment"];
+  // Filter out the priorities that are actually in the fetched list (or just add them if missing from DB for demo)
+  const existingPriorities = priorities.filter(p => services.includes(p) || true); 
+  // For the sake of matching the exact prompt, we will force the 4 core treatments to be at the top
+  const core = priorities;
+  const others = services.filter(s => !priorities.includes(s) && s !== "Invisible Braces"); 
+  return [...core, ...others];
 };
 
 const ServiceCard = ({ service }) => {
-  const data = serviceData[service] || DEFAULT;
+  const data = updatedServiceData[service] || DEFAULT;
   return (
     <motion.div
-      whileHover={{ y: -6, boxShadow: "0 20px 40px rgba(0,0,0,0.18)" }}
-      className="group relative rounded-2xl overflow-hidden shadow-md w-full bg-white cursor-pointer flex flex-col"
+      whileHover={{ y: -8, transition: { duration: 0.3 } }}
+      className="group relative rounded-[20px] overflow-hidden bg-white shadow-[0_4px_20px_rgba(0,0,0,0.05)] hover:shadow-[0_15px_40px_rgba(0,0,0,0.1)] border border-gray-100 transition-all cursor-pointer flex flex-col h-full"
     >
-      {/* Image */}
-      <div className="relative h-52 w-full overflow-hidden">
+      <div className="relative h-[240px] w-full overflow-hidden">
         <img
           src={data.image}
           alt={service}
           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
           onError={(e) => { e.target.src = DEFAULT.image; }}
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-textPrimary/80 via-transparent to-transparent opacity-80" />
+        <h3 className="absolute bottom-5 left-5 text-2xl font-bold text-white z-10">{service}</h3>
       </div>
 
-      {/* Content */}
-      <div className="flex flex-col flex-1 p-5 bg-white">
-        <h3 className="text-lg font-bold text-gray-900 mb-2 leading-snug">{service}</h3>
-        <p className="text-gray-500 text-sm leading-relaxed flex-1">{data.desc}</p>
-        <a
-          href="https://wa.me/917567368089?text=Hello%2C%20I%20would%20like%20to%20know%20more%20about%20dental%20treatment."
-          target="_blank"
-          rel="noopener noreferrer"
-          className="mt-4 inline-flex items-center text-sm font-semibold text-primary hover:text-blue-700 transition-colors group/btn"
-        >
-          Learn More
-          <ChevronRight className="ml-1 w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
-        </a>
+      <div className="flex flex-col flex-1 p-6 bg-white">
+        <ul className="space-y-3 flex-1 mb-6">
+          {data.features.map((feature, idx) => (
+            <li key={idx} className="flex items-start text-textMuted text-[15px]">
+              <CheckCircle2 className="w-5 h-5 text-secondary mr-2 shrink-0 object-contain" />
+              <span className="leading-snug">{feature}</span>
+            </li>
+          ))}
+        </ul>
+        
+        <div className="pt-4 border-t border-gray-100 mt-auto">
+          <a
+            href={`https://wa.me/917567368089?text=Hello%2C%20I%20want%20to%20know%20more%20about%20${encodeURIComponent(service)}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center text-sm font-bold text-primary group-hover:text-blue-700 transition-colors"
+          >
+            Explore Treatment
+            <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+          </a>
+        </div>
       </div>
     </motion.div>
   );
 };
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { staggerChildren: 0.1 } }
-};
-
-const itemVariants = {
-  hidden: { y: 24, opacity: 0 },
-  visible: { y: 0, opacity: 1, transition: { duration: 0.5 } }
-};
-
 const Services = () => {
-  const [services, setServices] = useState([]);
+  const [services, setServices] = useState([
+    "Dental Implants", "Invisible Braces", "Teeth Whitening", "Root Canal Treatment"
+  ]);
 
   useEffect(() => {
     api.get('/services')
-      .then(r => setServices(r.data.services))
+      .then(r => setServices(prioritizeServices(r.data.services)))
       .catch(() => {});
   }, []);
 
   return (
-    <section id="services" className="py-20 bg-gray-50">
+    <section id="services" className="py-24 bg-background">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-
-        {/* Header */}
-        <div className="text-center mb-12">
-          <motion.span
-            initial={{ opacity: 0, y: -10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="inline-block bg-blue-50 text-primary px-4 py-1.5 rounded-full text-sm font-semibold mb-4 tracking-wide"
-          >
-            Enhancing Your Smile
-          </motion.span>
+        
+        <div className="text-center mb-16 max-w-3xl mx-auto">
           <motion.h2
             initial={{ opacity: 0, y: -10 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-3xl md:text-5xl font-bold text-gray-900 mb-4"
+            className="text-3xl md:text-5xl font-bold text-textPrimary mb-4 leading-tight"
           >
-            Our Dental <span className="text-primary">Services</span>
+            Transforming Smiles with <br/><span className="text-primary">Advanced Procedures</span>
           </motion.h2>
           <motion.p
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
-            className="text-lg text-gray-500 max-w-2xl mx-auto"
+            className="text-lg text-textMuted"
           >
-            We offer a full range of modern dental treatments for the whole family — comfortable, affordable and expert care.
+            Experience pain-free treatments with world-class dental technology tailored to your needs.
           </motion.p>
         </div>
 
-        {/* Grid */}
-        {services.length > 0 ? (
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-50px" }}
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
-          >
-            {services.map((service, i) => (
-              <motion.div key={i} variants={itemVariants}>
-                <ServiceCard service={service} />
-              </motion.div>
-            ))}
-          </motion.div>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {[...Array(8)].map((_, i) => (
-              <div key={i} className="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 animate-pulse">
-                <div className="bg-gray-200 h-52 w-full" />
-                <div className="p-5 space-y-3">
-                  <div className="h-4 bg-gray-200 rounded w-3/4" />
-                  <div className="h-3 bg-gray-100 rounded w-full" />
-                  <div className="h-3 bg-gray-100 rounded w-5/6" />
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
+        {/* 3 columns on desktop, 1 on mobile */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {services.map((service, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ delay: i * 0.1, duration: 0.5 }}
+            >
+              <ServiceCard service={service} />
+            </motion.div>
+          ))}
+        </div>
+        
       </div>
     </section>
   );
