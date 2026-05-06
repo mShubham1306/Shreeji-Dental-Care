@@ -28,7 +28,7 @@ const AboutDoctor = () => {
             {/* Enhanced Glow Effect for Doctor Image */}
           <div className="absolute inset-0 bg-gradient-to-tr from-primary/30 to-secondary/30 blur-2xl rounded-full transform scale-90 translate-y-4"></div>
           
-          <div className="relative rounded-[30px] overflow-hidden bg-gray-50 border border-gray-100 shadow-[0_0_40px_rgba(14,165,233,0.15)] hover:shadow-[0_0_60px_rgba(14,165,233,0.3)] transition-all duration-500 group aspect-[4/5]">
+          <div className="relative max-w-md mx-auto lg:mx-0 lg:max-w-none rounded-[30px] overflow-hidden bg-gray-50 border border-gray-100 shadow-[0_0_40px_rgba(14,165,233,0.15)] hover:shadow-[0_0_60px_rgba(14,165,233,0.3)] transition-all duration-500 group aspect-[4/5] w-full">
             <img 
               src="/doctor.png" 
               alt="Dr. Amit Vankar" 

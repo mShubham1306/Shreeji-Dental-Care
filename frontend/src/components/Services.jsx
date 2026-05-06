@@ -64,7 +64,7 @@ const ServiceCard = ({ service, index }) => (
     className="group relative bg-white rounded-[24px] overflow-hidden shadow-[0_4px_20px_rgba(0,0,0,0.03)] border border-gray-100 hover:shadow-[0_10px_40px_rgba(0,0,0,0.08)] transition-all flex flex-col h-full cursor-pointer"
   >
     {/* Image Container with Hover Zoom */}
-    <div className="relative h-64 overflow-hidden bg-gray-50 aspect-video">
+    <div className="relative aspect-[4/3] w-full overflow-hidden bg-gray-50">
       <img
         src={service.image}
         alt={service.title}
