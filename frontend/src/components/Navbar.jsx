@@ -18,15 +18,15 @@ const Navbar = () => {
     { name: 'Home', href: '#home' },
     { name: 'About', href: '#about' },
     { name: 'Services', href: '#services' },
-    { name: 'Smile Gallery', href: '#gallery' },
-    { name: 'Testimonials', href: '#testimonials' },
+    { name: 'Gallery', href: '#gallery' },
+    { name: 'Reviews', href: '#testimonials' },
     { name: 'Contact', href: '#contact' },
   ];
 
   return (
     <header
       className={`fixed top-0 w-full z-50 transition-all duration-300 ${
-        scrolled ? 'bg-white py-4 shadow-[0_4px_30px_rgba(0,0,0,0.03)]' : 'bg-transparent py-6'
+        scrolled ? 'bg-white/90 backdrop-blur-md py-4 shadow-[0_4px_30px_rgba(0,0,0,0.03)] border-b border-gray-100/50' : 'bg-transparent py-6'
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -63,7 +63,7 @@ const Navbar = () => {
                href="https://wa.me/917567368089?text=Hello%2C%20I%20would%20like%20to%20book%20a%20dental%20appointment."
                target="_blank"
                rel="noopener noreferrer"
-               className="bg-primary text-white px-6 py-2.5 rounded-full text-sm font-semibold hover:bg-blue-600 shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5 ml-2"
+               className="bg-primary text-white px-6 py-2.5 rounded-full text-sm font-semibold hover:bg-blue-600 shadow-[0_4px_15px_rgba(14,165,233,0.3)] hover:shadow-[0_8px_25px_rgba(14,165,233,0.4)] transition-all transform hover:-translate-y-0.5 ml-2"
             >
               Book Appointment
             </motion.a>
@@ -91,15 +91,15 @@ const Navbar = () => {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-white border-b border-gray-100 overflow-hidden shadow-lg absolute w-full"
+            className="md:hidden bg-white/95 backdrop-blur-xl border-b border-gray-100 overflow-hidden shadow-2xl absolute w-full"
           >
-            <div className="px-4 pt-4 pb-6 space-y-2">
+            <div className="px-5 pt-4 pb-8 space-y-2">
               {navLinks.map((link) => (
                 <a
                   key={link.name}
                   href={link.href}
                   onClick={() => setIsOpen(false)}
-                  className="block px-3 py-3 rounded-xl text-base font-medium text-textPrimary hover:text-primary hover:bg-blue-50 transition-colors"
+                  className="block px-4 py-3.5 rounded-xl text-base font-semibold text-textPrimary hover:text-primary hover:bg-blue-50 transition-colors"
                 >
                   {link.name}
                 </a>
@@ -107,7 +107,7 @@ const Navbar = () => {
               <a
                 href="https://wa.me/917567368089?text=Hello%2C%20I%20would%20like%20to%20book%20a%20dental%20appointment."
                 onClick={() => setIsOpen(false)}
-                className="flex items-center justify-center gap-2 w-full mt-4 bg-primary text-white px-5 py-4 rounded-xl font-bold hover:bg-blue-700 shadow-md"
+                className="flex items-center justify-center gap-2 w-full mt-6 bg-primary text-white px-5 py-4 rounded-xl font-bold hover:bg-blue-700 shadow-[0_8px_30px_rgba(14,165,233,0.3)]"
               >
                 Book Appointment
               </a>

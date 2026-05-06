@@ -1,140 +1,150 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
-import { ArrowRight, CheckCircle2 } from 'lucide-react';
-import api from '../services/api';
+import { ArrowRight, Activity, CheckCircle2 } from 'lucide-react';
 
-const updatedServiceData = {
-  "Dental Implants": {
-    image: "https://images.unsplash.com/photo-1606811841689-23dfddce3e95?auto=format&fit=crop&w=600&q=80",
-    features: ["Permanent and natural-looking", "Tooth replacement solutions"]
+const allServices = [
+  {
+    title: "Root Canal Treatment",
+    image: "/services/root-canal.jpg",
+    features: ["Pain-free procedure", "Save infected teeth"]
   },
-  "Invisible Braces": {
-    image: "https://images.unsplash.com/photo-1598256989800-fea99e4d41fa?auto=format&fit=crop&w=600&q=80",
-    features: ["Straighten teeth comfortably", "Without metal braces"]
+  {
+    title: "Dental Implants",
+    image: "/services/dental-implant.jpg",
+    features: ["Permanent replacement", "Natural look & feel"]
   },
-  "Teeth Whitening": {
-    image: "https://images.unsplash.com/photo-1606265752439-1f18756aa5fc?auto=format&fit=crop&w=600&q=80",
-    features: ["Professional whitening", "Brighter confident smile"]
+  {
+    title: "Teeth Whitening",
+    image: "/services/teeth-whitening.jpg",
+    features: ["Instant results", "Professional standard"]
   },
-  "Root Canal Treatment": {
-    image: "https://images.unsplash.com/photo-1629909615184-74f495363b67?auto=format&fit=crop&w=600&q=80",
-    features: ["Pain-free treatment", "Save infected teeth"]
+  {
+    title: "Smile Designing",
+    image: "/services/smile-design.jpg",
+    features: ["Complete makeover", "Customized aesthetic"]
   },
-  "Smile Makeover": {
-    image: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=600&q=80",
-    features: ["Complete cosmetic", "Smile transformation"]
+  {
+    title: "Braces & Aligners",
+    image: "/services/braces.jpg",
+    features: ["Invisible options", "Perfect alignment"]
   },
-  "Pediatric Dentistry": {
-    image: "https://images.unsplash.com/photo-1549429465-b7720dbe45c5?auto=format&fit=crop&w=600&q=80",
-    features: ["Gentle dental care", "For children"]
+  {
+    title: "Cosmetic Dentistry",
+    image: "/services/cosmetic-dentistry.jpg",
+    features: ["Enhance your smile", "Veneers & bonding"]
+  },
+  {
+    title: "Pediatric Dentistry",
+    image: "/services/pediatric.jpg",
+    features: ["Child-friendly care", "Preventive treatments"]
+  },
+  {
+    title: "Crown & Bridge",
+    image: "/services/crown-bridge.jpg",
+    features: ["Restore broken teeth", "Durable ceramics"]
+  },
+  {
+    title: "Tooth Extraction",
+    image: "/services/extraction.jpg",
+    features: ["Safe & painless", "Wisdom tooth removal"]
+  },
+  {
+    title: "Emergency Dental Care",
+    image: "/services/emergency.jpg",
+    features: ["Immediate relief", "Walk-ins welcome"]
   }
-};
+];
 
-const DEFAULT = {
-  image: "https://images.unsplash.com/photo-1606811841689-23dfddce3e95?auto=format&fit=crop&w=600&q=80",
-  features: ["Professional treatment", "Gentle care"]
-};
-
-// Reorder services to put the core ones first if available
-const prioritizeServices = () => {
-  return [
-    "Dental Implants", 
-    "Invisible Braces", 
-    "Teeth Whitening", 
-    "Root Canal Treatment",
-    "Smile Makeover",
-    "Pediatric Dentistry"
-  ];
-};
-
-const ServiceCard = ({ service }) => {
-  const data = updatedServiceData[service] || DEFAULT;
-  return (
-    <motion.div
-      whileHover={{ y: -8, transition: { duration: 0.3 } }}
-      className="group relative rounded-[20px] overflow-hidden bg-white shadow-[0_4px_20px_rgba(0,0,0,0.05)] hover:shadow-[0_15px_40px_rgba(0,0,0,0.1)] border border-gray-100 transition-all cursor-pointer flex flex-col h-full"
-    >
-      <div className="relative h-[240px] w-full overflow-hidden">
-        <img
-          src={data.image}
-          alt={service}
-          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-          onError={(e) => { e.target.src = DEFAULT.image; }}
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-textPrimary/80 via-transparent to-transparent opacity-80" />
-        <h3 className="absolute bottom-5 left-5 text-2xl font-bold text-white z-10">{service}</h3>
+const ServiceCard = ({ service, index }) => (
+  <motion.div
+    initial={{ opacity: 0, y: 30 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    viewport={{ once: true, margin: "-50px" }}
+    transition={{ duration: 0.5, delay: index * 0.05 }}
+    className="group relative bg-white rounded-[24px] overflow-hidden shadow-[0_4px_20px_rgba(0,0,0,0.03)] border border-gray-100 hover:shadow-[0_10px_40px_rgba(0,0,0,0.08)] transition-all flex flex-col h-full cursor-pointer"
+  >
+    {/* Image Container with Hover Zoom */}
+    <div className="relative h-64 overflow-hidden bg-gray-50 aspect-video">
+      <img
+        src={service.image}
+        alt={service.title}
+        loading="lazy"
+        onError={(e) => { e.target.src = "https://images.unsplash.com/photo-1606811841689-23dfddce3e95?auto=format&fit=crop&w=600&q=80" }}
+        className="w-full h-full object-cover transition-transform duration-700 ease-in-out group-hover:scale-110"
+      />
+      {/* Modern Gradient Overlay */}
+      <div className="absolute inset-0 bg-gradient-to-t from-[#0f172a]/80 via-[#0f172a]/20 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-300"></div>
+      
+      {/* Fast View Action */}
+      <div className="absolute top-4 right-4 bg-white/90 backdrop-blur p-2 rounded-full opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">
+        <ArrowRight className="w-4 h-4 text-primary" />
       </div>
 
-      <div className="flex flex-col flex-1 p-6 bg-white">
-        <ul className="space-y-3 flex-1 mb-6">
-          {data.features.map((feature, idx) => (
-            <li key={idx} className="flex items-start text-textMuted text-[15px]">
-              <CheckCircle2 className="w-5 h-5 text-secondary mr-2 shrink-0 object-contain" />
-              <span className="leading-snug">{feature}</span>
-            </li>
-          ))}
-        </ul>
-        
-        <div className="pt-4 border-t border-gray-100 mt-auto">
-          <a
-            href={`https://wa.me/917567368089?text=Hello%2C%20I%20want%20to%20know%20more%20about%20${encodeURIComponent(service)}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center text-sm font-bold text-primary group-hover:text-blue-700 transition-colors"
-          >
-            Explore Treatment
-            <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
-          </a>
-        </div>
+      {/* Floating Medical Icon */}
+      <div className="absolute bottom-4 right-4 bg-primary text-white p-2.5 rounded-xl shadow-lg transform translate-y-12 group-hover:translate-y-0 transition-transform duration-500">
+         <Activity className="w-5 h-5"/>
       </div>
-    </motion.div>
-  );
-};
+    </div>
+
+    {/* Content */}
+    <div className="p-8 flex-grow flex flex-col">
+      <h3 className="text-xl font-bold text-textPrimary mb-4 group-hover:text-primary transition-colors">
+        {service.title}
+      </h3>
+      
+      <ul className="mb-6 space-y-3">
+        {service.features.map((feature, idx) => (
+          <li key={idx} className="flex items-start text-textMuted text-[15px]">
+            <CheckCircle2 className="w-5 h-5 text-secondary mr-2 shrink-0 object-contain" />
+            <span className="leading-snug">{feature}</span>
+          </li>
+        ))}
+      </ul>
+
+      <div className="mt-auto">
+        <a href="https://wa.me/917567368089" target="_blank" rel="noopener noreferrer" className="inline-flex items-center font-bold text-primary hover:text-blue-700 transition-colors">
+          Book Consultation <ArrowRight className="ml-2 w-4 h-4" />
+        </a>
+      </div>
+    </div>
+  </motion.div>
+);
 
 const Services = () => {
-  const [services, setServices] = useState(prioritizeServices());
-
-  useEffect(() => {
-    api.get('/services')
-      .then(() => setServices(prioritizeServices()))
-      .catch(() => setServices(prioritizeServices()));
-  }, []);
-
   return (
-    <section id="services" className="py-24 bg-background">
+    <section className="py-24 bg-gray-50/50" id="services">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        <div className="text-center mb-16 max-w-3xl mx-auto">
+        <div className="text-center mb-16">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            className="inline-block bg-primary/10 text-primary px-4 py-1.5 rounded-full text-sm font-semibold mb-6 tracking-wide uppercase"
+          >
+            Our Treatments
+          </motion.div>
           <motion.h2
             initial={{ opacity: 0, y: -10 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-3xl md:text-5xl font-bold text-textPrimary mb-4 leading-tight"
+            className="text-3xl md:text-5xl font-bold text-textPrimary mb-4"
           >
-            Transforming Smiles with <br/><span className="text-primary">Advanced Procedures</span>
+            Premium Dental <span className="text-primary">Services</span>
           </motion.h2>
           <motion.p
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
-            className="text-lg text-textMuted"
+            className="text-lg text-textMuted max-w-2xl mx-auto"
           >
-            Experience pain-free treatments with world-class dental technology tailored to your needs.
+            Experience world-class cosmetic and restorative dentistry right here in Vadodara. Uncompromising quality for your perfect smile.
           </motion.p>
         </div>
 
-        {/* 3 columns on desktop, 1 on mobile */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {services.map((service, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-50px" }}
-              transition={{ delay: i * 0.1, duration: 0.5 }}
-            >
-              <ServiceCard service={service} />
-            </motion.div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {allServices.map((service, idx) => (
+            <ServiceCard key={idx} service={service} index={idx} />
           ))}
         </div>
         

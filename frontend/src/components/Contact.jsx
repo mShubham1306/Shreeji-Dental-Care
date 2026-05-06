@@ -1,119 +1,173 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
-import api from '../services/api';
-import { MapPin, Phone, Clock, Mail } from 'lucide-react';
+import { MapPin, Phone, Mail, Clock, CalendarHeart, Send, ArrowUpRight } from 'lucide-react';
 
 const Contact = () => {
-   const [clinicInfo, setClinicInfo] = useState(null);
-
-   useEffect(() => {
-     const fetchClinicInfo = async () => {
-       try {
-         const response = await api.get('/clinic');
-         setClinicInfo(response.data);
-       } catch (error) {
-         console.error('Error fetching clinic info:', error);
-       }
-     };
-     fetchClinicInfo();
-   }, []);
- 
-   if (!clinicInfo) return null;
-
   return (
-    <section className="py-24 bg-gray-50" id="contact">
+    <section className="py-24 bg-gray-50/50 relative overflow-hidden" id="contact">
+      {/* Background decoration */}
+      <div className="absolute top-0 left-0 w-full h-full overflow-hidden -z-10">
+         <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-primary/5 rounded-full blur-3xl"></div>
+         <div className="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-secondary/5 rounded-full blur-3xl"></div>
+      </div>
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <motion.h2 
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            className="inline-block bg-primary/10 text-primary px-4 py-1.5 rounded-full text-sm font-semibold mb-6 tracking-wide uppercase"
+          >
+            Get In Touch
+          </motion.div>
+          <motion.h2
             initial={{ opacity: 0, y: -10 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             className="text-3xl md:text-5xl font-bold text-textPrimary mb-4"
           >
-            Visit Our <span className="text-primary">Clinic</span>
+             Book Your <span className="text-primary">Appointment</span>
           </motion.h2>
-          <motion.p 
+          <motion.p
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
             className="text-lg text-textMuted max-w-2xl mx-auto"
           >
-            We're conveniently located in Vadodara. Feel free to call us or visit during our working hours.
+             Take the first step towards a healthier, brighter smile. Contact us today or easily book an appointment online.
           </motion.p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+        <div className="flex flex-col lg:flex-row gap-12 bg-white rounded-[32px] shadow-[0_10px_50px_rgba(0,0,0,0.05)] overflow-hidden border border-gray-100">
           
-          {/* Contact Details */}
+          {/* Left Side: Clinic Details */}
           <motion.div 
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="space-y-6"
+             initial={{ opacity: 0, x: -30 }}
+             whileInView={{ opacity: 1, x: 0 }}
+             viewport={{ once: true }}
+             className="w-full lg:w-5/12 bg-primary p-10 md:p-14 text-white flex flex-col justify-between relative overflow-hidden"
           >
-            <div className="flex items-start p-8 bg-white rounded-3xl shadow-[0_4px_20px_rgba(0,0,0,0.03)] border border-gray-100 hover:shadow-lg transition-all group">
-              <div className="w-14 h-14 bg-primary/5 rounded-2xl flex items-center justify-center text-primary shrink-0 group-hover:scale-110 transition-transform">
-                <MapPin className="w-7 h-7" />
-              </div>
-              <div className="ml-6">
-                <h4 className="text-xl font-bold text-textPrimary mb-2">Clinic Location</h4>
-                <p className="text-textMuted leading-relaxed">
-                  {clinicInfo.address}
-                </p>
-              </div>
-            </div>
+             <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-white/5 rounded-full blur-3xl translate-x-1/2 -translate-y-1/2 pointer-events-none"></div>
 
-            <div className="flex items-start p-8 bg-white rounded-3xl shadow-[0_4px_20px_rgba(0,0,0,0.03)] border border-gray-100 hover:shadow-lg transition-all group">
-              <div className="w-14 h-14 bg-secondary/5 rounded-2xl flex items-center justify-center text-secondary shrink-0 group-hover:scale-110 transition-transform">
-                <Clock className="w-7 h-7" />
-              </div>
-              <div className="ml-6">
-                <h4 className="text-xl font-bold text-textPrimary mb-2">Working Hours</h4>
-                <div className="text-textMuted space-y-1">
-                  <p>Morning:<br/><span className="text-textPrimary font-semibold">{clinicInfo.timings.morning}</span></p>
-                  <p className="mt-2">Evening:<br/><span className="text-textPrimary font-semibold">{clinicInfo.timings.evening}</span></p>
-                  <p className="mt-3 text-red-500 font-semibold bg-red-50 inline-block px-3 py-1 rounded-md text-sm">{clinicInfo.timings.closed}</p>
-                </div>
-              </div>
-            </div>
+             <div className="relative z-10">
+                <h3 className="text-3xl font-bold mb-8">Contact Information</h3>
+                
+                <div className="space-y-8">
+                   <div className="flex items-start gap-5">
+                      <div className="bg-white/10 p-3 rounded-full shrink-0">
+                         <MapPin className="w-6 h-6" />
+                      </div>
+                      <div>
+                         <h4 className="font-bold text-lg mb-1">Clinic Address</h4>
+                         <p className="text-white/80 leading-relaxed text-[15px]">
+                            GF/04, Yaksha Shree Complex,<br/>
+                            Below Vraj Hospital,<br/>
+                            Chhani Jakatnaka,<br/>
+                            Vadodara, Gujarat
+                         </p>
+                      </div>
+                   </div>
 
-            <div className="flex items-start p-8 bg-white rounded-3xl shadow-[0_4px_20px_rgba(0,0,0,0.03)] border border-gray-100 hover:shadow-lg transition-all group">
-              <div className="w-14 h-14 bg-primary/5 rounded-2xl flex items-center justify-center text-primary shrink-0 group-hover:scale-110 transition-transform">
-                <Phone className="w-7 h-7" />
-              </div>
-              <div className="ml-6 flex items-center h-14">
-                <div>
-                   <h4 className="text-xl font-bold text-textPrimary mb-1">Direct Call</h4>
-                   <p className="text-textMuted text-xl font-medium">
-                     {clinicInfo.phone}
-                   </p>
-                </div>
-              </div>
-            </div>
-          </motion.div>
+                   <div className="flex items-start gap-5">
+                      <div className="bg-white/10 p-3 rounded-full shrink-0">
+                         <Phone className="w-6 h-6" />
+                      </div>
+                      <div>
+                         <h4 className="font-bold text-lg mb-1">Phone Number</h4>
+                         <a href="tel:+917567368089" className="text-white/80 leading-relaxed text-[15px] hover:text-white transition-colors">
+                            +91 75673 68089
+                         </a>
+                      </div>
+                   </div>
 
-          {/* Interactive Map Button */}
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.95 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            className="min-h-[400px] h-full bg-white rounded-3xl overflow-hidden relative border border-gray-100 flex items-center justify-center shadow-[0_4px_20px_rgba(0,0,0,0.03)] group cursor-pointer"
-            onClick={() => window.open('https://share.google/LumhNOPJcBz9UFysK', '_blank')}
-          >
-             <div className="text-center p-8 z-10 w-full h-full flex flex-col items-center justify-center hover:bg-gray-50 transition-colors">
-                <div className="w-24 h-24 bg-primary/10 rounded-full flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-500">
-                   <MapPin className="w-12 h-12 text-primary animate-bounce" style={{animationDuration: '2s'}} />
-                </div>
-                <h3 className="text-2xl font-bold text-textPrimary mb-3">View on Map</h3>
-                <p className="text-textMuted max-w-xs mx-auto mb-8 text-center">
-                   Open Google Maps to get direct navigation to our clinic.
-                </p>
-                <div className="px-8 py-3 bg-white border-2 border-primary text-primary rounded-full font-bold shadow-sm hover:bg-primary hover:text-white transition-colors">
-                   Get Directions
+                   <div className="flex items-start gap-5">
+                      <div className="bg-white/10 p-3 rounded-full shrink-0">
+                         <Clock className="w-6 h-6" />
+                      </div>
+                      <div>
+                         <h4 className="font-bold text-lg mb-1">Clinic Timing</h4>
+                         <p className="text-white/80 leading-relaxed text-[15px]">
+                            Mon - Sat<br/>
+                            9:30 AM – 1:00 PM<br/>
+                            4:30 PM – 8:00 PM
+                         </p>
+                      </div>
+                   </div>
                 </div>
              </div>
-             {/* Simple grid bg */}
-             <div className="absolute inset-0 pattern-grid-lg text-gray-100 -z-10 bg-[linear-gradient(to_right,#f0f0f0_1px,transparent_1px),linear-gradient(to_bottom,#f0f0f0_1px,transparent_1px)] bg-[size:40px_40px]"></div>
+
+             <div className="relative z-10 mt-12 bg-white/10 p-6 rounded-2xl border border-white/20 backdrop-blur-sm">
+                <h4 className="font-bold mb-3 flex items-center gap-2 text-lg">
+                   Google Maps
+                </h4>
+                <p className="text-sm text-white/80 mb-4">Find directions directly on Google Maps.</p>
+                <a href="https://www.google.com/search?q=Shreeji+Dental+Care" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center bg-white text-primary px-6 py-3 rounded-xl font-bold hover:bg-gray-100 transition-colors w-full group">
+                   View Location <ArrowUpRight className="ml-2 w-4 h-4 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                </a>
+             </div>
+          </motion.div>
+
+          {/* Right Side: Appointment Form */}
+          <motion.div 
+             initial={{ opacity: 0, x: 30 }}
+             whileInView={{ opacity: 1, x: 0 }}
+             viewport={{ once: true }}
+             className="w-full lg:w-7/12 p-10 md:p-14"
+          >
+             <h3 className="text-2xl font-bold text-textPrimary mb-8">Request an Appointment</h3>
+             
+             <form className="space-y-6" onSubmit={(e) => { e.preventDefault(); window.open("https://wa.me/917567368089", "_blank"); }}>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                   <div className="space-y-2">
+                      <label className="text-sm font-semibold text-textPrimary">Full Name</label>
+                      <input type="text" placeholder="John Doe" required className="w-full px-5 py-4 rounded-xl bg-gray-50 border border-gray-100 focus:bg-white focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all" />
+                   </div>
+                   <div className="space-y-2">
+                      <label className="text-sm font-semibold text-textPrimary">Mobile Number</label>
+                      <input type="tel" placeholder="+91 XXXXX XXXXX" required className="w-full px-5 py-4 rounded-xl bg-gray-50 border border-gray-100 focus:bg-white focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all" />
+                   </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                   <div className="space-y-2">
+                      <label className="text-sm font-semibold text-textPrimary">Email (Optional)</label>
+                      <input type="email" placeholder="john@example.com" className="w-full px-5 py-4 rounded-xl bg-gray-50 border border-gray-100 focus:bg-white focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all" />
+                   </div>
+                   <div className="space-y-2">
+                      <label className="text-sm font-semibold text-textPrimary">Appointment Date</label>
+                      <input type="date" required className="w-full px-5 py-4 rounded-xl bg-gray-50 border border-gray-100 focus:bg-white focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all text-textMuted" />
+                   </div>
+                </div>
+
+                <div className="space-y-2">
+                   <label className="text-sm font-semibold text-textPrimary">Treatment Type</label>
+                   <select required className="w-full px-5 py-4 rounded-xl bg-gray-50 border border-gray-100 focus:bg-white focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all text-textMuted appearance-none">
+                      <option value="">Select a treatment...</option>
+                      <option value="General Checkup">General Checkup</option>
+                      <option value="Root Canal">Root Canal Treatment</option>
+                      <option value="Dental Implants">Dental Implants</option>
+                      <option value="Braces / Invisible Aligners">Braces & Aligners</option>
+                      <option value="Teeth Whitening">Teeth Whitening</option>
+                      <option value="Emergency">Emergency Dental Care</option>
+                      <option value="Other">Other</option>
+                   </select>
+                </div>
+
+                <div className="space-y-2">
+                   <label className="text-sm font-semibold text-textPrimary">Message</label>
+                   <textarea rows="4" placeholder="Briefly describe your dental issue..." className="w-full px-5 py-4 rounded-xl bg-gray-50 border border-gray-100 focus:bg-white focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all resize-none"></textarea>
+                </div>
+
+                <div className="pt-2">
+                   <button type="submit" className="w-full bg-primary text-white py-4 rounded-xl font-bold text-lg hover:bg-blue-600 shadow-[0_8px_30px_rgba(14,165,233,0.3)] hover:-translate-y-1 transition-all flex items-center justify-center gap-2">
+                      <CalendarHeart className="w-5 h-5" />
+                      Book on WhatsApp
+                   </button>
+                </div>
+
+             </form>
           </motion.div>
 
         </div>
