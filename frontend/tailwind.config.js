@@ -14,6 +14,10 @@ export default {
         textPrimary: '#0f172a', // Dark slate text
         textMuted: '#64748B', // Soft gray text
       },
+      boxShadow: {
+        'soft': '0 4px 20px rgba(0, 0, 0, 0.05)',
+        'hover': '0 20px 40px rgba(0, 0, 0, 0.1)',
+      },
       fontFamily: {
         sans: ['Inter', 'Poppins', 'sans-serif'],
       },
