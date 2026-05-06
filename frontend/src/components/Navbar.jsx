@@ -20,6 +20,26 @@ const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Close mobile menu on resize if screen becomes desktop
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 768) {
+        setIsOpen(false);
+      }
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // Lock body scroll when mobile menu is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+  }, [isOpen]);
+
   const navLinks = [
     { name: 'Home', href: '#home' },
     { name: 'About', href: '#about' },
@@ -30,9 +50,9 @@ const Navbar = () => {
 
   return (
     <header
-      className={`fixed top-0 w-full z-50 transition-all duration-500 ${
-        scrolled 
-          ? 'bg-white/80 backdrop-blur-lg py-3 shadow-premium border-b border-gray-100/50' 
+      className={`fixed top-0 left-0 w-full z-[100] transition-all duration-500 ${
+        scrolled || isOpen
+          ? 'bg-white/95 backdrop-blur-lg py-3 shadow-premium border-b border-gray-100/50' 
           : 'bg-transparent py-6'
       }`}
     >
@@ -49,15 +69,15 @@ const Navbar = () => {
             animate={{ opacity: 1, x: 0 }}
             className="flex items-center"
           >
-            <a href="#" className="group flex items-center gap-2">
+            <a href="#" onClick={() => setIsOpen(false)} className="group flex items-center gap-2">
               <div className="w-10 h-10 rounded-xl bg-primary text-white flex items-center justify-center text-xl font-bold shadow-lg group-hover:rotate-6 transition-transform duration-300">
                 S
               </div>
               <div className="flex flex-col">
-                <span className="font-extrabold text-xl tracking-tight text-textPrimary leading-none">
+                <span className={`font-extrabold text-xl tracking-tight leading-none transition-colors duration-300 ${scrolled || isOpen ? 'text-textPrimary' : 'text-textPrimary'}`}>
                   Shreeji<span className="text-primary">Dental</span>
                 </span>
-                <span className="text-[10px] font-bold text-textMuted uppercase tracking-[0.2em]">Care & Cure</span>
+                <span className={`text-[10px] font-bold uppercase tracking-[0.2em] transition-colors duration-300 ${scrolled || isOpen ? 'text-textMuted' : 'text-textMuted'}`}>Care & Cure</span>
               </div>
             </a>
           </motion.div>
@@ -103,7 +123,8 @@ const Navbar = () => {
             </a>
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className={`p-2 rounded-xl transition-all duration-300 ${isOpen ? 'bg-gray-100 text-primary' : 'text-textPrimary hover:bg-gray-50'}`}
+              aria-label="Toggle Menu"
+              className={`p-2 rounded-xl transition-all duration-300 z-[110] ${isOpen ? 'bg-primary text-white shadow-lg rotate-90' : 'text-textPrimary hover:bg-gray-100'}`}
             >
               {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>
@@ -115,12 +136,13 @@ const Navbar = () => {
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="md:hidden bg-white/95 backdrop-blur-2xl border-b border-gray-100 overflow-hidden shadow-2xl absolute w-full"
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.3, ease: "easeInOut" }}
+            className="md:hidden bg-white border-b border-gray-100 overflow-hidden shadow-2xl absolute top-full left-0 w-full z-[100]"
           >
-            <div className="px-6 pt-4 pb-10 space-y-1">
+            <div className="px-6 pt-4 pb-10 space-y-1 bg-white">
               {navLinks.map((link, i) => (
                 <motion.a
                   key={link.name}
