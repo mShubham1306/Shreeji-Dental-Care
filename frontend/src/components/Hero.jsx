@@ -78,7 +78,7 @@ const Hero = () => {
             </a>
             
             <a
-              href="https://www.google.com/search?q=Shreeji+Dental+Care"
+              href="https://share.google/pIXji9Xu2MjzlUKsY"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full text-lg font-bold bg-white text-textPrimary border border-gray-200 shadow-sm hover:shadow-md hover:border-gray-300 hover:-translate-y-1 transition-all"

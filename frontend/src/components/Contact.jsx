@@ -1,8 +1,43 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { MapPin, Phone, Mail, Clock, CalendarHeart, Send, ArrowUpRight } from 'lucide-react';
 
 const Contact = () => {
+  const [formData, setFormData] = useState({
+    name: '',
+    mobile: '',
+    email: '',
+    date: '',
+    treatment: '',
+    message: ''
+  });
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleWhatsAppSubmit = (e) => {
+    e.preventDefault();
+    
+    const messageLines = [
+      "Hello, I would like to book an appointment.",
+      "",
+      `*Patient Name:* ${formData.name}`,
+      `*Mobile:* ${formData.mobile}`
+    ];
+    
+    if (formData.email) messageLines.push(`*Email:* ${formData.email}`);
+    messageLines.push(`*Preferred Date:* ${formData.date}`);
+    messageLines.push(`*Treatment Needed:* ${formData.treatment}`);
+    if (formData.message) messageLines.push(`*Message:* ${formData.message}`);
+    
+    const text = encodeURIComponent(messageLines.join('\n'));
+    const whatsappUrl = `https://wa.me/917567368089?text=${text}`;
+    
+    window.open(whatsappUrl, '_blank');
+  };
+
   return (
     <section className="py-24 bg-gray-50/50 relative overflow-hidden" id="contact">
       {/* Background decoration */}
@@ -102,7 +137,7 @@ const Contact = () => {
                    Google Maps
                 </h4>
                 <p className="text-sm text-white/80 mb-4">Find directions directly on Google Maps.</p>
-                <a href="https://www.google.com/search?q=Shreeji+Dental+Care" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center bg-white text-primary px-6 py-3 rounded-xl font-bold hover:bg-gray-100 transition-colors w-full group">
+                <a href="https://share.google/pIXji9Xu2MjzlUKsY" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center bg-white text-primary px-6 py-3 rounded-xl font-bold hover:bg-gray-100 transition-colors w-full group">
                    View Location <ArrowUpRight className="ml-2 w-4 h-4 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
                 </a>
              </div>
@@ -117,47 +152,47 @@ const Contact = () => {
           >
              <h3 className="text-2xl font-bold text-textPrimary mb-8">Request an Appointment</h3>
              
-             <form className="space-y-6" onSubmit={(e) => { e.preventDefault(); window.open("https://wa.me/917567368089", "_blank"); }}>
+             <form className="space-y-6" onSubmit={handleWhatsAppSubmit}>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                    <div className="space-y-2">
                       <label className="text-sm font-semibold text-textPrimary">Full Name</label>
-                      <input type="text" placeholder="John Doe" required className="w-full px-5 py-4 rounded-xl bg-gray-50 border border-gray-100 focus:bg-white focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all" />
+                      <input type="text" name="name" value={formData.name} onChange={handleInputChange} placeholder="John Doe" required className="w-full px-5 py-4 rounded-xl bg-gray-50 border border-gray-100 focus:bg-white focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all" />
                    </div>
                    <div className="space-y-2">
                       <label className="text-sm font-semibold text-textPrimary">Mobile Number</label>
-                      <input type="tel" placeholder="+91 XXXXX XXXXX" required className="w-full px-5 py-4 rounded-xl bg-gray-50 border border-gray-100 focus:bg-white focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all" />
+                      <input type="tel" name="mobile" value={formData.mobile} onChange={handleInputChange} placeholder="+91 XXXXX XXXXX" required className="w-full px-5 py-4 rounded-xl bg-gray-50 border border-gray-100 focus:bg-white focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all" />
                    </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                    <div className="space-y-2">
                       <label className="text-sm font-semibold text-textPrimary">Email (Optional)</label>
-                      <input type="email" placeholder="john@example.com" className="w-full px-5 py-4 rounded-xl bg-gray-50 border border-gray-100 focus:bg-white focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all" />
+                      <input type="email" name="email" value={formData.email} onChange={handleInputChange} placeholder="john@example.com" className="w-full px-5 py-4 rounded-xl bg-gray-50 border border-gray-100 focus:bg-white focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all" />
                    </div>
                    <div className="space-y-2">
                       <label className="text-sm font-semibold text-textPrimary">Appointment Date</label>
-                      <input type="date" required className="w-full px-5 py-4 rounded-xl bg-gray-50 border border-gray-100 focus:bg-white focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all text-textMuted" />
+                      <input type="date" name="date" value={formData.date} onChange={handleInputChange} required className="w-full px-5 py-4 rounded-xl bg-gray-50 border border-gray-100 focus:bg-white focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all text-textMuted" />
                    </div>
                 </div>
 
                 <div className="space-y-2">
                    <label className="text-sm font-semibold text-textPrimary">Treatment Type</label>
-                   <select required className="w-full px-5 py-4 rounded-xl bg-gray-50 border border-gray-100 focus:bg-white focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all text-textMuted appearance-none">
+                   <select name="treatment" value={formData.treatment} onChange={handleInputChange} required className="w-full px-5 py-4 rounded-xl bg-gray-50 border border-gray-100 focus:bg-white focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all text-textMuted appearance-none">
                       <option value="">Select a treatment...</option>
                       <option value="General Checkup">General Checkup</option>
-                      <option value="Root Canal">Root Canal Treatment</option>
+                      <option value="Root Canal Treatment">Root Canal Treatment</option>
                       <option value="Dental Implants">Dental Implants</option>
                       <option value="Braces / Invisible Aligners">Braces & Aligners</option>
                       <option value="Teeth Whitening">Teeth Whitening</option>
-                      <option value="Emergency">Emergency Dental Care</option>
+                      <option value="Emergency Dental Care">Emergency Dental Care</option>
                       <option value="Other">Other</option>
                    </select>
                 </div>
 
                 <div className="space-y-2">
-                   <label className="text-sm font-semibold text-textPrimary">Message</label>
-                   <textarea rows="4" placeholder="Briefly describe your dental issue..." className="w-full px-5 py-4 rounded-xl bg-gray-50 border border-gray-100 focus:bg-white focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all resize-none"></textarea>
+                   <label className="text-sm font-semibold text-textPrimary">Message (Optional)</label>
+                   <textarea name="message" value={formData.message} onChange={handleInputChange} rows="4" placeholder="Briefly describe your dental issue..." className="w-full px-5 py-4 rounded-xl bg-gray-50 border border-gray-100 focus:bg-white focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all resize-none"></textarea>
                 </div>
 
                 <div className="pt-2">
