@@ -2,16 +2,16 @@ import React from 'react';
 import { motion } from 'framer-motion';
 
 const galleryImages = [
-  { src: "/gallery/1.jpg", alt: "Clinic Interior", style: "md:col-span-2 md:row-span-2 aspect-square md:aspect-auto" },
-  { src: "/gallery/2.jpg", alt: "Reception Area", style: "aspect-[4/3]" },
-  { src: "/gallery/3.jpg", alt: "Dental Chair", style: "aspect-[4/3]" },
-  { src: "/gallery/4.jpg", alt: "Modern Equipment", style: "aspect-[4/3]" },
-  { src: "/gallery/5.jpg", alt: "Dentist Consultation", style: "aspect-[4/3]" },
-  { src: "/gallery/6.jpg", alt: "Smiling Patients", style: "md:col-span-2 aspect-[8/3] object-cover" },
-  { src: "/gallery/7.jpg", alt: "Treatment Room", style: "aspect-square" },
-  { src: "/gallery/8.jpg", alt: "Orthodontic Procedures", style: "aspect-square" },
-  { src: "/gallery/9.jpg", alt: "Cosmetic Dentistry", style: "aspect-[4/3] md:col-span-2" },
-  { src: "/gallery/10.jpg", alt: "Sterilization Process", style: "aspect-[4/3] md:col-span-2" }
+  { src: "/header.png", alt: "Clinic Interior", style: "md:col-span-2 md:row-span-2 aspect-square md:aspect-auto" },
+  { src: "/header.png", alt: "Reception Area", style: "aspect-[4/3]" },
+  { src: "/header.png", alt: "Dental Chair", style: "aspect-[4/3]" },
+  { src: "/header.png", alt: "Modern Equipment", style: "aspect-[4/3]" },
+  { src: "/header.png", alt: "Dentist Consultation", style: "aspect-[4/3]" },
+  { src: "/header.png", alt: "Smiling Patients", style: "md:col-span-2 aspect-[8/3] object-cover" },
+  { src: "/header.png", alt: "Treatment Room", style: "aspect-square" },
+  { src: "/header.png", alt: "Orthodontic Procedures", style: "aspect-square" },
+  { src: "/header.png", alt: "Cosmetic Dentistry", style: "aspect-[4/3] md:col-span-2" },
+  { src: "/header.png", alt: "Sterilization Process", style: "aspect-[4/3] md:col-span-2" }
 ];
 
 const Gallery = () => {

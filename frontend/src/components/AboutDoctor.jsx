@@ -30,7 +30,7 @@ const AboutDoctor = () => {
           
           <div className="relative rounded-[30px] overflow-hidden bg-gray-50 border border-gray-100 shadow-[0_0_40px_rgba(14,165,233,0.15)] hover:shadow-[0_0_60px_rgba(14,165,233,0.3)] transition-all duration-500 group aspect-[4/5]">
             <img 
-              src="/doctor.jpg" 
+              src="/doctor.png" 
               alt="Dr. Amit Vankar" 
               loading="lazy"
               className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
