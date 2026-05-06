@@ -10,7 +10,7 @@ import Footer from '../components/Footer';
 
 const Home = () => {
   return (
-    <div className="min-h-screen flex flex-col font-sans relative overflow-x-hidden">
+    <div className="min-h-screen flex flex-col font-sans relative">
       <Navbar />
       <main>
         <Hero />
