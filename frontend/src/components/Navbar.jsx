@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Menu, X, Phone } from 'lucide-react';
+import React, { useState, useEffect, useCallback } from 'react';
+import { Menu, X, Phone, ArrowRight, Instagram, Facebook, Linkedin } from 'lucide-react';
 import { motion, AnimatePresence, useScroll, useSpring } from 'framer-motion';
 
 const Navbar = () => {
@@ -12,6 +12,7 @@ const Navbar = () => {
     restDelta: 0.001
   });
 
+  // Handle scroll state for navbar background
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
@@ -20,27 +21,39 @@ const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Close mobile menu on resize if screen becomes desktop
+  // Close menu on escape key
   useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth >= 768) {
-        setIsOpen(false);
-      }
+    const handleEsc = (e) => {
+      if (e.key === 'Escape') setIsOpen(false);
     };
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    window.addEventListener('keydown', handleEsc);
+    return () => window.removeEventListener('keydown', handleEsc);
   }, []);
 
   // Lock body scroll when mobile menu is open
   useEffect(() => {
     if (isOpen) {
+      const scrollY = window.scrollY;
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.width = '100%';
       document.body.style.overflow = 'hidden';
-      // Add padding to prevent layout shift if scrollbar disappears
-      document.body.style.paddingRight = '0px'; 
     } else {
-      document.body.style.overflow = 'unset';
-      document.body.style.paddingRight = '0px';
+      const scrollY = document.body.style.top;
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.width = '';
+      document.body.style.overflow = '';
+      if (scrollY) {
+        window.scrollTo(0, parseInt(scrollY || '0') * -1);
+      }
     }
+    return () => {
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.width = '';
+      document.body.style.overflow = '';
+    };
   }, [isOpen]);
 
   const navLinks = [
@@ -51,179 +64,202 @@ const Navbar = () => {
     { name: 'Contact', href: '#contact' },
   ];
 
-  const handleLinkClick = (e, href) => {
+  const handleLinkClick = useCallback((e, href) => {
+    e.preventDefault();
     setIsOpen(false);
-    // Smooth scroll handling for mobile
-    if (href.startsWith('#')) {
-      e.preventDefault();
-      const element = document.querySelector(href);
-      if (element) {
-        const offset = 80; // Navbar height
-        const bodyRect = document.body.getBoundingClientRect().top;
-        const elementRect = element.getBoundingClientRect().top;
-        const elementPosition = elementRect - bodyRect;
-        const offsetPosition = elementPosition - offset;
+    
+    const targetId = href.replace('#', '');
+    const element = document.getElementById(targetId);
+    
+    if (element) {
+      const offset = 80; // Navbar height
+      const bodyRect = document.body.getBoundingClientRect().top;
+      const elementRect = element.getBoundingClientRect().top;
+      
+      // If body is fixed (menu open), we need to adjust calculation
+      const currentScroll = isOpen ? Math.abs(parseInt(document.body.style.top || '0')) : window.scrollY;
+      const elementPosition = elementRect - (isOpen ? 0 : bodyRect);
+      const offsetPosition = elementPosition - offset;
 
+      setTimeout(() => {
         window.scrollTo({
           top: offsetPosition,
           behavior: 'smooth'
         });
-      }
+      }, isOpen ? 300 : 0); // Wait for menu close animation
     }
-  };
+  }, [isOpen]);
 
   return (
-    <header
-      className={`fixed top-0 left-0 w-full z-[1000] transition-all duration-500 ${
-        scrolled || isOpen
-          ? 'bg-white/95 backdrop-blur-lg py-3 shadow-premium border-b border-gray-100/50' 
-          : 'bg-transparent py-6'
-      }`}
-    >
-      {/* Scroll Progress Bar */}
-      <motion.div
-        className="absolute bottom-0 left-0 right-0 h-[2px] bg-primary origin-left z-[1001]"
-        style={{ scaleX }}
-      />
+    <>
+      <header
+        className={`fixed top-0 left-0 w-full z-[1000] transition-all duration-500 ${
+          scrolled 
+            ? 'bg-white/80 backdrop-blur-xl py-3 shadow-premium border-b border-gray-100/50' 
+            : 'bg-transparent py-6'
+        }`}
+      >
+        {/* Desktop Scroll Progress */}
+        <motion.div
+          className="absolute bottom-0 left-0 right-0 h-[2px] bg-primary origin-left z-[1001] hidden md:block"
+          style={{ scaleX }}
+        />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center relative z-[1002]">
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            className="flex items-center"
-          >
-            <a href="#home" onClick={(e) => handleLinkClick(e, '#home')} className="group flex items-center gap-2">
-              <div className="w-10 h-10 rounded-xl bg-primary text-white flex items-center justify-center text-xl font-bold shadow-lg group-hover:rotate-6 transition-transform duration-300">
-                S
-              </div>
-              <div className="flex flex-col">
-                <span className="font-extrabold text-xl tracking-tight text-textPrimary leading-none">
-                  Shreeji<span className="text-primary">Dental</span>
-                </span>
-                <span className="text-[10px] font-bold text-textMuted uppercase tracking-[0.2em]">Care & Cure</span>
-              </div>
-            </a>
-          </motion.div>
-
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex space-x-1 items-center">
-            {navLinks.map((link, i) => (
-              <motion.a
-                key={link.name}
-                href={link.href}
-                onClick={(e) => handleLinkClick(e, link.href)}
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.1 }}
-                className="px-4 py-2 rounded-full text-[14px] lg:text-[15px] text-textMuted hover:text-primary hover:bg-primary/5 font-semibold transition-all duration-300"
-              >
-                {link.name}
-              </motion.a>
-            ))}
+        <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center">
+            {/* Logo */}
             <motion.div
-               initial={{ opacity: 0, scale: 0.9 }}
-               animate={{ opacity: 1, scale: 1 }}
-               transition={{ delay: 0.4 }}
-               className="ml-4"
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              className="relative z-[1100]"
             >
-              <a
-                href="https://wa.me/917567368089?text=Hello%2C%20I%20would%20like%20to%20book%20a%20dental%20appointment."
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-primary text-white px-7 py-3 rounded-full text-sm font-bold hover:bg-blue-600 shadow-premium hover:shadow-premium-hover transition-all transform hover:-translate-y-0.5 inline-block"
-              >
-                Book Appointment
+              <a href="#home" onClick={(e) => handleLinkClick(e, '#home')} className="group flex items-center gap-2.5">
+                <div className="w-11 h-11 rounded-2xl bg-primary text-white flex items-center justify-center text-2xl font-black shadow-lg shadow-primary/20 group-hover:rotate-6 transition-transform duration-500">
+                  S
+                </div>
+                <div className="flex flex-col">
+                  <span className="font-black text-xl tracking-tight text-textPrimary leading-none">
+                    Shreeji<span className="text-primary">Dental</span>
+                  </span>
+                  <span className="text-[10px] font-black text-textMuted uppercase tracking-[0.25em] mt-1">Care & Cure</span>
+                </div>
               </a>
             </motion.div>
-          </nav>
 
-          {/* Mobile UI */}
-          <div className="md:hidden flex items-center gap-2">
-            <a 
-              href="tel:+917567368089" 
-              className="text-primary bg-primary/10 p-2.5 rounded-xl hover:bg-primary hover:text-white transition-all duration-300 active:scale-95"
-            >
-               <Phone className="w-5 h-5"/>
-            </a>
-            <button
-              onClick={() => setIsOpen(!isOpen)}
-              aria-label={isOpen ? "Close Menu" : "Open Menu"}
-              className={`p-2.5 rounded-xl transition-all duration-300 relative z-[1100] ${isOpen ? 'bg-primary text-white shadow-lg rotate-90' : 'text-textPrimary hover:bg-gray-100'}`}
-            >
-              {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-            </button>
+            {/* Desktop Navigation */}
+            <nav className="hidden md:flex space-x-2 items-center">
+              {navLinks.map((link, i) => (
+                <motion.a
+                  key={link.name}
+                  href={link.href}
+                  onClick={(e) => handleLinkClick(e, link.href)}
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.1 }}
+                  className="px-4 py-2 rounded-full text-[15px] text-textMuted hover:text-primary hover:bg-primary/5 font-bold transition-all duration-300"
+                >
+                  {link.name}
+                </motion.a>
+              ))}
+              <motion.div
+                 initial={{ opacity: 0, scale: 0.9 }}
+                 animate={{ opacity: 1, scale: 1 }}
+                 transition={{ delay: 0.5 }}
+                 className="ml-4"
+              >
+                <a
+                  href="https://wa.me/917567368089"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="bg-primary text-white px-8 py-3.5 rounded-2xl text-sm font-black hover:bg-blue-600 shadow-premium hover:shadow-premium-hover transition-all transform hover:-translate-y-0.5 inline-block"
+                >
+                  Book Appointment
+                </a>
+              </motion.div>
+            </nav>
+
+            {/* Mobile Controls */}
+            <div className="md:hidden flex items-center gap-4 relative z-[1100]">
+              <a 
+                href="tel:+917567368089" 
+                className={`p-3 rounded-2xl transition-all duration-300 ${isOpen ? 'bg-white/10 text-white' : 'bg-primary/10 text-primary active:scale-90'}`}
+              >
+                 <Phone className="w-5 h-5"/>
+              </a>
+              <button
+                onClick={() => setIsOpen(!isOpen)}
+                aria-label="Toggle Menu"
+                className={`p-3 rounded-2xl transition-all duration-500 ${
+                  isOpen 
+                    ? 'bg-white text-primary rotate-180 shadow-xl' 
+                    : 'bg-textPrimary text-white active:scale-90'
+                }`}
+              >
+                {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+              </button>
+            </div>
           </div>
         </div>
-      </div>
+      </header>
 
-      {/* Mobile Navigation Menu */}
+      {/* Mobile Fullscreen Menu Overlay */}
       <AnimatePresence>
         {isOpen && (
-          <>
-            {/* Backdrop for mobile menu */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setIsOpen(false)}
-              className="fixed inset-0 bg-black/20 backdrop-blur-sm z-[998] md:hidden"
-            />
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.4 }}
+            className="fixed inset-0 z-[1050] md:hidden"
+          >
+            {/* Backdrop Blur */}
+            <div className="absolute inset-0 bg-primary/95 backdrop-blur-2xl" />
             
-            <motion.div
-              initial={{ opacity: 0, y: -20, height: 0 }}
-              animate={{ opacity: 1, y: 0, height: 'auto' }}
-              exit={{ opacity: 0, y: -20, height: 0 }}
-              transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
-              className="md:hidden bg-white border-b border-gray-100 overflow-hidden shadow-2xl absolute top-full left-0 w-full z-[999]"
-            >
-              <div className="px-6 pt-4 pb-12 space-y-1 bg-white">
+            {/* Decorative background text */}
+            <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-5 flex items-center justify-center">
+               <span className="text-[20vh] font-black text-white rotate-90 whitespace-nowrap">SHREEJI DENTAL</span>
+            </div>
+
+            <div className="relative h-full flex flex-col justify-between px-8 pt-32 pb-12">
+              {/* Navigation Links */}
+              <nav className="flex flex-col gap-4">
                 {navLinks.map((link, i) => (
                   <motion.a
                     key={link.name}
                     href={link.href}
-                    initial={{ opacity: 0, x: -20 }}
+                    initial={{ opacity: 0, x: -30 }}
                     animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: i * 0.05 }}
+                    transition={{ delay: 0.1 + i * 0.08, duration: 0.5 }}
                     onClick={(e) => handleLinkClick(e, link.href)}
-                    className="flex items-center w-full px-5 py-4 rounded-2xl text-base font-bold text-textPrimary hover:text-primary hover:bg-primary/5 active:bg-primary/10 transition-all border border-transparent hover:border-primary/10"
+                    className="group flex items-center justify-between text-white"
                   >
-                    {link.name}
+                    <span className="text-4xl xs:text-5xl font-black tracking-tight group-hover:translate-x-4 transition-transform duration-500 uppercase">
+                      {link.name}
+                    </span>
+                    <div className="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center group-hover:bg-white group-hover:text-primary transition-all duration-500">
+                      <ArrowRight className="w-6 h-6" />
+                    </div>
                   </motion.a>
                 ))}
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.3 }}
-                  className="pt-6"
+              </nav>
+
+              {/* Bottom Content */}
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5 }}
+                className="space-y-10"
+              >
+                <a
+                  href="https://wa.me/917567368089"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-3 w-full bg-white text-primary px-8 py-6 rounded-[32px] text-xl font-black shadow-2xl active:scale-95 transition-all uppercase tracking-wider"
                 >
-                  <a
-                    href="https://wa.me/917567368089?text=Hello%2C%20I%20would%20like%20to%20book%20a%20dental%20appointment."
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    onClick={() => setIsOpen(false)}
-                    className="flex items-center justify-center gap-2 w-full bg-primary text-white px-6 py-5 rounded-2xl font-black shadow-premium active:scale-[0.98] transition-all"
-                  >
-                    Book Appointment
-                  </a>
-                </motion.div>
-                
-                {/* Mobile Quick Contact Info */}
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.4 }}
-                  className="mt-8 pt-8 border-t border-gray-50 flex flex-col items-center gap-4"
-                >
-                  <p className="text-xs font-bold text-textMuted uppercase tracking-widest">Available 9:30 AM - 8:00 PM</p>
-                  <a href="tel:+917567368089" className="text-primary font-black text-lg">+91 75673 68089</a>
-                </motion.div>
-              </div>
-            </motion.div>
-          </>
+                  Book Appointment
+                </a>
+
+                <div className="flex flex-col gap-8">
+                  <div className="flex justify-between items-center border-t border-white/10 pt-8">
+                    <div className="flex gap-4">
+                      {[Facebook, Instagram, Linkedin].map((Icon, idx) => (
+                        <a key={idx} href="#" className="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center text-white hover:bg-white hover:text-primary transition-all duration-500">
+                          <Icon className="w-5 h-5" />
+                        </a>
+                      ))}
+                    </div>
+                    <div className="text-right">
+                       <p className="text-white/40 text-[10px] font-black uppercase tracking-widest mb-1">Clinic Line</p>
+                       <a href="tel:+917567368089" className="text-white font-black text-lg">+91 75673 68089</a>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            </div>
+          </motion.div>
         )}
       </AnimatePresence>
-    </header>
+    </>
   );
 };
 
