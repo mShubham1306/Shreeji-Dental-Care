@@ -33,7 +33,7 @@ const Footer = () => {
           <div>
             <h4 className="font-bold text-textPrimary text-lg mb-6 tracking-wide">Quick Links</h4>
             <ul className="space-y-4">
-              {['Home', 'About Dr. Amit Vankar', 'Smile Gallery', 'Patient Reviews', 'Contact Us'].map((link) => (
+              {['Home', 'About Dr. Amit Vankar', 'Patient Reviews', 'Contact Us'].map((link) => (
                 <li key={link}>
                   <a href="#" className="text-textMuted hover:text-primary transition-colors flex items-center gap-2 group">
                     <span className="w-1.5 h-1.5 bg-gray-300 rounded-full group-hover:bg-primary transition-colors"></span>

@@ -19,7 +19,7 @@ const Hero = () => {
       {/* Background Image using premium clinic interior */}
       <div className="absolute inset-0 z-0 h-full w-full">
         <img
-          src="/header.png"
+          src="https://images.unsplash.com/photo-1606811841689-23dfddce3e95?auto=format&fit=crop&w=1920&q=80"
           alt="Shreeji Dental Care - Modern Indian Dental Clinic"
           loading="lazy"
           className="w-full h-full object-cover object-center"
