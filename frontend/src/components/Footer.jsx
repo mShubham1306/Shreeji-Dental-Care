@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import api from '../services/api';
-import { Facebook, Instagram, Twitter } from 'lucide-react';
 
 const Footer = () => {
    const [clinicInfo, setClinicInfo] = useState(null);
@@ -33,14 +32,14 @@ const Footer = () => {
               {clinicInfo.tagline}. Delivering premium dental healthcare with modern technology and expert professionals.
             </p>
             <div className="flex space-x-3 pt-2">
-               <a href="#" className="w-10 h-10 rounded-full bg-gray-50 border border-gray-100 flex items-center justify-center hover:bg-primary hover:text-white transition-colors text-textMuted">
-                  <Facebook className="w-4 h-4" />
+               <a href="#" className="w-10 h-10 rounded-full bg-gray-50 border border-gray-100 flex items-center justify-center hover:bg-primary hover:text-white transition-colors text-textMuted text-xs font-bold font-sans">
+                  FB
                </a>
-               <a href="#" className="w-10 h-10 rounded-full bg-gray-50 border border-gray-100 flex items-center justify-center hover:bg-primary hover:text-white transition-colors text-textMuted">
-                  <Instagram className="w-4 h-4" />
+               <a href="#" className="w-10 h-10 rounded-full bg-gray-50 border border-gray-100 flex items-center justify-center hover:bg-primary hover:text-white transition-colors text-textMuted text-xs font-bold font-sans">
+                  IG
                </a>
-               <a href="#" className="w-10 h-10 rounded-full bg-gray-50 border border-gray-100 flex items-center justify-center hover:bg-primary hover:text-white transition-colors text-textMuted">
-                  <Twitter className="w-4 h-4" />
+               <a href="#" className="w-10 h-10 rounded-full bg-gray-50 border border-gray-100 flex items-center justify-center hover:bg-primary hover:text-white transition-colors text-textMuted text-xs font-bold font-sans">
+                  X
                </a>
             </div>
           </div>

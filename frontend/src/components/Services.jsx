@@ -5,40 +5,28 @@ import api from '../services/api';
 
 const updatedServiceData = {
   "Dental Implants": {
-    image: "https://images.openai.com/static-rsc-4/jTPjMky-kiHn3iZJpgufuyvqOnDbWCIQmnaKk5pA-RComhOxwOM_NvXCiZrYDdJBDVg7NS8pV9_davNzjZC8YSzwbYzIMcI_MgCvfDj2KEuLeb526E4e_DfgQlgiLcA1loLIzCcnQPp8V3mUE5reg0oMwAAV20JcSdsZDlcjD0T2jKyrd4EKpE1e5r03TFip?purpose=fullsize",
-    features: ["Permanent tooth replacement", "Natural look & feel"]
+    image: "https://images.unsplash.com/photo-1606811841689-23dfddce3e95?auto=format&fit=crop&w=600&q=80",
+    features: ["Permanent and natural-looking", "Tooth replacement solutions"]
   },
   "Invisible Braces": {
-    image: "https://images.openai.com/static-rsc-4/6-H32YvTgyKUvhKnZfRbuMb3YuKO14aCq1kzhLGlIta3LcJeIZWyHfhGqEUpw_oY4k1YniIhdCvkvDh2bjPv-WpKryXcOvumHWF4l9acNcFvfbhy3fIhGLVDwvLLIRkBBPjYp4ok3dD-BUQxOrTSqgMjxl38vqC37IdvQbtMlLDwYekc070BssNHdmpXf2Gr?purpose=fullsize",
-    features: ["No metal braces", "Comfortable & removable"]
+    image: "https://images.unsplash.com/photo-1598256989800-fea99e4d41fa?auto=format&fit=crop&w=600&q=80",
+    features: ["Straighten teeth comfortably", "Without metal braces"]
   },
   "Teeth Whitening": {
-    image: "https://images.openai.com/static-rsc-4/zRRrsHS35ozhJieyiYd4WEcbe1hNO2F9MB5yg1F7f7Gg1MKmuUgT41wQ_ft1TJZEkMUCPmBd_z2E21-cmDvvopLCY5tf7Y16st2ZEOCOGAtZZw_NvBgGEdhH-NAEF3eVTgwdUVGwTkMwUV-S-zC44ht9m7k5eSCBSbiM7Sjk9Nyz26GGzaS4hrHm-raEgWr6?purpose=fullsize",
-    features: ["Instant brighter smile", "Safe & painless"]
+    image: "https://images.unsplash.com/photo-1606265752439-1f18756aa5fc?auto=format&fit=crop&w=600&q=80",
+    features: ["Professional whitening", "Brighter confident smile"]
   },
   "Root Canal Treatment": {
-    image: "https://images.openai.com/static-rsc-4/3hNHM7ep03KHn82gkAPkjZ3wOm2Ridj5yyvD-YFCLbOKGHeENofQWrDLZseBdRGeDmpsyxebv3nUT8MmJfzj_Kj_DBn5dNA-sdsvsPMg6ojZ8UjLWk2qbsOG6IMKMm1msxwotG4UP-QaMabf5GRkgqXaVpAbMigregIJabx4CP3wiJdgJrgtqa5IBCKefVq8?purpose=fullsize",
-    features: ["Pain relief treatment", "Save natural tooth"]
+    image: "https://images.unsplash.com/photo-1629909615184-74f495363b67?auto=format&fit=crop&w=600&q=80",
+    features: ["Pain-free treatment", "Save infected teeth"]
   },
-  "Tooth Extraction": {
-    image: "https://images.unsplash.com/photo-1588776813677-77aaf5595b83?auto=format&fit=crop&w=600&q=80",
-    features: ["Painless procedure", "Quick recovery"]
+  "Smile Makeover": {
+    image: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=600&q=80",
+    features: ["Complete cosmetic", "Smile transformation"]
   },
-  "Crowns & Bridges": {
-    image: "https://images.unsplash.com/photo-1609840114035-3c981b782dfe?auto=format&fit=crop&w=600&q=80",
-    features: ["Restore broken teeth", "Natural ceramic look"]
-  },
-  "Dentures": {
-    image: "https://images.unsplash.com/photo-1571772996211-2f02c9727629?auto=format&fit=crop&w=600&q=80",
-    features: ["Comfortable fit", "Restore chewing ability"]
-  },
-  "Gum Treatment": {
-    image: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?auto=format&fit=crop&w=600&q=80",
-    features: ["Treat bleeding gums", "Healthy foundation"]
-  },
-  "Dental Cleaning": {
-    image: "https://images.unsplash.com/photo-1598256989728-6623f99aa1fa?auto=format&fit=crop&w=600&q=80",
-    features: ["Remove plaque & tartar", "Expert polishing"]
+  "Pediatric Dentistry": {
+    image: "https://images.unsplash.com/photo-1549429465-b7720dbe45c5?auto=format&fit=crop&w=600&q=80",
+    features: ["Gentle dental care", "For children"]
   }
 };
 
@@ -47,15 +35,16 @@ const DEFAULT = {
   features: ["Professional treatment", "Gentle care"]
 };
 
-// Reorder services to put the 4 main ones first if available
-const prioritizeServices = (services) => {
-  const priorities = ["Dental Implants", "Invisible Braces", "Teeth Whitening", "Root Canal Treatment"];
-  // Filter out the priorities that are actually in the fetched list (or just add them if missing from DB for demo)
-  const existingPriorities = priorities.filter(p => services.includes(p) || true); 
-  // For the sake of matching the exact prompt, we will force the 4 core treatments to be at the top
-  const core = priorities;
-  const others = services.filter(s => !priorities.includes(s) && s !== "Invisible Braces"); 
-  return [...core, ...others];
+// Reorder services to put the core ones first if available
+const prioritizeServices = () => {
+  return [
+    "Dental Implants", 
+    "Invisible Braces", 
+    "Teeth Whitening", 
+    "Root Canal Treatment",
+    "Smile Makeover",
+    "Pediatric Dentistry"
+  ];
 };
 
 const ServiceCard = ({ service }) => {
@@ -103,14 +92,12 @@ const ServiceCard = ({ service }) => {
 };
 
 const Services = () => {
-  const [services, setServices] = useState([
-    "Dental Implants", "Invisible Braces", "Teeth Whitening", "Root Canal Treatment"
-  ]);
+  const [services, setServices] = useState(prioritizeServices());
 
   useEffect(() => {
     api.get('/services')
-      .then(r => setServices(prioritizeServices(r.data.services)))
-      .catch(() => {});
+      .then(() => setServices(prioritizeServices()))
+      .catch(() => setServices(prioritizeServices()));
   }, []);
 
   return (
